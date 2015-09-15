@@ -63,7 +63,7 @@ URxvt*termName:         xterm-256color
 *color15:     rgb:f8/fc/f8
 
 ! yeah console configure
-yeahconsole*consoleHeight:    50
+yeahconsole*consoleHeight: 10
 
 
 ! vim: et sw=2 syn=xdefaults

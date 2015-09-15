@@ -63,6 +63,7 @@ export HISTSIZE=10000
 export HISTCONTROL=ignoredups:erasedups  
 # append history entries
 shopt -s histappend
+shopt -s checkwinsize
 
 
 ## bind forward search to M-S-R instead of C-s (which locks)
@@ -137,6 +138,11 @@ export LESS_TERMCAP_so=''
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 export PAGER=less
+
+### Neurodebian paths ###
+for ndsf in /etc/afni/afni.sh /etc/fsl/5.0/fsl.sh; do
+ [ -r $ndsf ] && source $ndsf
+done
 
 # fasd
 export PATH="$PATH:$HOME/bin"
