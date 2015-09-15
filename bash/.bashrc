@@ -138,4 +138,7 @@ export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 export PAGER=less
 
+# fasd
+export PATH="$PATH:$HOME/bin"
+eval "$(fasd --init auto)"
 
