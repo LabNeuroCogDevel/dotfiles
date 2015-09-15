@@ -52,9 +52,9 @@ function s {
  ssh $1 -AYt $shell
 }
 
+
 #^c-x ^c-e -->vim
 export EDITOR=vim
-
 
 #####HISTORY####
 #store lots of history
@@ -141,4 +141,5 @@ export PAGER=less
 # fasd
 export PATH="$PATH:$HOME/bin"
 eval "$(fasd --init auto)"
+unalias s
 
