@@ -1,13 +1,16 @@
-# use alt+key to do things
+! to reload
+! xrdb ~/.Xdefaults
+
+! use alt+key to do things
 *eightBitInput: 	false
 *metaSendsEscape:	true
 
-# bold/underline at the same time 
+! bold/underline at the same time 
 *VT100.veryBoldColors: 6
 
-# 
+ 
 *faceName:      	ProFont
-#*faceName:      	EnvyCodeR
+!*faceName:      	EnvyCodeR
 *dynamicColors: 	true
 
 XTerm*background:    	#222222
@@ -21,7 +24,7 @@ URxvt*font:             xft:DejaVu Sans Mono:pixelsize=18
 URxvt.perl-ext-common:  default,matcher
 URxvt.urlLauncher:      /usr/bin/chromium
 URxvt.matcher.button:   1
-! osX doesn't have termcap info for rxvt
+! osX does not have termcap info for rxvt
 URxvt*termName:         xterm-256color
 
 ! Bells are urgent, for windows manager
