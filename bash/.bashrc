@@ -45,6 +45,13 @@ alias matlab='matlab -nodesktop -nosplash'
 alias notes='vim ~/notes/$(date +%F)'
 alias sshmaster='ssh -MNf' #create ControlMaster
 
+### ssh
+function s {
+ [ -z "$1" ] && echo "need a host" >&2 && return 0
+ shell="bash" # forces skynet and arnold to load .bashrc
+ ssh $1 -AYt $shell
+}
+
 #^c-x ^c-e -->vim
 export EDITOR=vim
 
