@@ -1,13 +1,58 @@
 # CRANmirror
 options(repos=structure(c(CRAN="http://lib.stat.cmu.edu/R/CRAN")))
 
-# install missing packages
-basepkg <- c('dataview','setwidth') #'vimcom',
-install.packages( basepkg [! basepkg %in% installed.packages() ] )
-# colors
-if(! 'colorout' %in% installed.packages() ) devtools::install_github("jalvesaq/colorout")
 
-if(interactive()) {  library(colorout); library(dataview); library(vimcom);library(setwidth) }
+# fancy prompt
+updatePrompt <- function(...) {options(prompt=format(Sys.time(), "\n# %X\n#> ")); return(TRUE)}
+
+.First <- function(...) {
+  if(interactive()) {  
+  
+    # not in Rstudio, otherwise it would have added itself to libPaths
+    if(! any(grepl("RStudio", .libPaths()))){
+
+      # need utils to use install packages stuff
+      #library(utils)
+
+      # install missing packages
+      #basepkg <- c('dataview','setwidth','devtools','pacman') #'vimcom',
+      #install.packages( basepkg [! basepkg %in% installed.packages() ] )
+
+      # colorout is not in cran
+      if(! 'colorout' %in% utils::installed.packages() ) devtools::install_github("jalvesaq/colorout")
+      if(! 'vimcom' %in% utils::installed.packages() ) devtools::install_github("jalvesaq/VimCom")
+
+      library(colorout) 
+      # pacman can be used to check+install other packages
+      if(! 'pacman' %in% utils::installed.packages() ) base::install.packages('pacamn')
+      library(pacman)
+
+      #  load (or install) others in cran
+      p_load(dataview) 
+      p_load(setwidth)
+      p_load(vimcom)
+
+      # add blue and pink colors to the prompt
+      updatePrompt <- function(...) {options(prompt=format(Sys.time(), 
+         #"\n# [38;5;27m%X[0;0m\n#[38;5;197m>[0;0m "
+         "\n[38;5;197m# [38;5;27m%X[0;0m\n "
+         )); return(TRUE)}
+    }
+
+    # add prompt changing function as task callback when we are interactive
+    # N.B R has to execute code (cannot just hit enter for new time)
+    addTaskCallback(updatePrompt)
+
+    # load some other useful packages
+    # plyr before dplyr so we still have plyr functions, but mask outdated with dplyr's
+    p_load('stats') # want dplyr filter to be loaded after stats::filter
+    p_load('plyr')
+    p_load('dplyr')
+    p_load('tidyr')
+  }
+
+}
+
 # if rstudio:  detach("package:colorout")
 
 # scripting alaiases
@@ -18,7 +63,7 @@ if(interactive()) {  library(colorout); library(dataview); library(vimcom);libra
 
 
 ##
-## http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/#Helper functions
+## http://www.cookbook-r.com/Graphs/Plotting <- means <- and <- error <- bars <- (ggplot2)/#Helper functions
 ##
 
 ## Summarizes data.
