@@ -143,6 +143,11 @@ export PAGER=less
 for ndsf in /etc/afni/afni.sh /etc/fsl/5.0/fsl.sh; do
  [ -r $ndsf ] && source $ndsf
 done
+fsdir="/opt/ni_tools/freesurfer"
+if [ -d $fsdir  ]; then
+  export FREESURFER_HOME="$fsdir"
+  source /opt/ni_tools/freesurfer/FreeSurferEnv.sh
+fi
 
 # fasd
 export PATH="$PATH:$HOME/bin"
