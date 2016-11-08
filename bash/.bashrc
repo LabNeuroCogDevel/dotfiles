@@ -149,6 +149,9 @@ if [ -d $fsdir  ]; then
   source /opt/ni_tools/freesurfer/FreeSurferEnv.sh
 fi
 
+## generic /opt/ni_tools
+export PATH="$PATH:/opt/ni_tools/afni"
+
 # fasd
 export PATH="$PATH:$HOME/bin"
 eval "$(fasd --init auto)"
