@@ -130,8 +130,10 @@ let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
 set guifont=Droid\ Sans\ Mono\ 12
 
-Bundle 'vimux.vim'
-" send selction
-vmap <leader>s "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
-" send selction
-nmap <leader>s V<leader>s<CR>
+"  github install error?
+" Bundle 'vimux.vim'
+" 
+" " send selction
+" vmap <leader>s "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
+" " send selction
+" nmap <leader>s V<leader>s<CR>
