@@ -151,6 +151,8 @@ fi
 
 ## generic /opt/ni_tools
 export PATH="$PATH:/opt/ni_tools/afni"
+## local matlab
+export PATH="$PATH:/usr/local/MATLAB/R2016b/bin/"
 
 # fasd
 export PATH="$PATH:$HOME/bin"

@@ -1,0 +1,9 @@
+# For the benefit of emacs users: -*- shell-script -*-
+
+#
+"rofi -combi-modi 'window,run' -show combi"
+ mod4+d
+
+"xterm"
+ mod4+Return
+
