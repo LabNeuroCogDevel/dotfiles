@@ -11,7 +11,7 @@ options(repos=structure(c(CRAN="http://lib.stat.cmu.edu/R/CRAN")))
     updatePrompt <- function(...) {
 
       # Emacs Speaks Stats, use default prompt
-      if(options('STERM')=='iESS') 
+      if(options('STERM')=='iESS' || options('pager')=='cat') 
            options(prompt="> ") 
 
       # Rstudio -- time but no colors
@@ -54,7 +54,7 @@ options(repos=structure(c(CRAN="http://lib.stat.cmu.edu/R/CRAN")))
     # add prompt changing function as task callback when we are interactive
     # N.B R has to execute code (cannot just hit enter for new time)
     addTaskCallback(updatePrompt)
-    updatePrompt()
+    #updatePrompt() # if we do this we get nice colors on terminal right away, but lock up ESS
 
     # load some other useful packages
     # plyr before dplyr so we still have plyr functions, but mask outdated with dplyr's
