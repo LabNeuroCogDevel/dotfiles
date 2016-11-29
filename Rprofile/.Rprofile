@@ -3,10 +3,27 @@ options(repos=structure(c(CRAN="http://lib.stat.cmu.edu/R/CRAN")))
 
 
 # fancy prompt
-updatePrompt <- function(...) {options(prompt=format(Sys.time(), "\n# %X\n#> ")); return(TRUE)}
 
 .First <- function(...) {
   if(interactive()) {  
+
+    # add blue and pink colors to the prompt
+    updatePrompt <- function(...) {
+
+      # Emacs Speaks Stats, use default prompt
+      if(options('STERM')=='iESS') 
+           options(prompt="> ") 
+
+      # Rstudio -- time but no colors
+      else if( any(grepl("RStudio", .libPaths())) )
+           options(prompt=format(Sys.time(), "\n# %X\n#> "))
+
+      # command line R
+      else 
+            options(prompt=format(Sys.time(),
+                            "\n[38;5;197m# [38;5;27m%X[0;0m\n "))
+      return(TRUE)
+    }
   
     # not in Rstudio, otherwise it would have added itself to libPaths
     if(! any(grepl("RStudio", .libPaths()))){
@@ -24,7 +41,7 @@ updatePrompt <- function(...) {options(prompt=format(Sys.time(), "\n# %X\n#> "))
 
       library(colorout) 
       # pacman can be used to check+install other packages
-      if(! 'pacman' %in% utils::installed.packages() ) base::install.packages('pacamn')
+      if(! 'pacman' %in% utils::installed.packages() ) utils::install.packages('pacman')
       library(pacman)
 
       #  load (or install) others in cran
@@ -32,16 +49,12 @@ updatePrompt <- function(...) {options(prompt=format(Sys.time(), "\n# %X\n#> "))
       p_load(setwidth)
       p_load(vimcom)
 
-      # add blue and pink colors to the prompt
-      updatePrompt <- function(...) {options(prompt=format(Sys.time(), 
-         #"\n# [38;5;27m%X[0;0m\n#[38;5;197m>[0;0m "
-         "\n[38;5;197m# [38;5;27m%X[0;0m\n "
-         )); return(TRUE)}
     }
 
     # add prompt changing function as task callback when we are interactive
     # N.B R has to execute code (cannot just hit enter for new time)
     addTaskCallback(updatePrompt)
+    updatePrompt()
 
     # load some other useful packages
     # plyr before dplyr so we still have plyr functions, but mask outdated with dplyr's
@@ -108,3 +121,6 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
 
     return(datac)
 }
+
+
+options(repo="https://mirrors.nics.utk.edu/cran")
