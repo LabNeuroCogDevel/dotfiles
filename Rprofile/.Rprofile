@@ -1,59 +1,79 @@
+# this should probably go into Rprofile.site
+#
 # CRANmirror
-options(repos=structure(c(CRAN="http://lib.stat.cmu.edu/R/CRAN")))
+#options(repos=structure(c(CRAN="http://lib.stat.cmu.edu/R/CRAN")))
+#options(repos=structure(c(CRAN="http://cran.mirrors.hoobly.com")))
+#options(repos=structure(c(CRAN="https://mirrors.nics.utk.edu/cran")))
+
+options(repos=structure(c(CRAN="https://cran.revolutionanalytics.com")))
+LNCDupdateLib <- function() {
+  nitoolslibpath <-'/opt/ni_tools/Rlib/'
+  if(file.exists(nitoolslibpath)){
+    # exapand path to include version
+    nitoolslibpath <- paste0(nitoolslibpath,version$major,'.', version$minor)
+    if( nitoolslibpath %in% .libPaths() ) { return(T) }
+    if(!file.exists(nitoolslibpath)) dir.create(nitoolslibpath)
+    .libPaths(nitoolslibpath)
+    return(T)
+  } 
+  return(F) 
+}
+invisible( LNCDupdateLib() )
 
 
-# fancy prompt
+
 updatePrompt <- function(...) {options(prompt=format(Sys.time(), "\n# %X\n#> ")); return(TRUE)}
 
 .First <- function(...) {
-  if(interactive()) {  
+
+  ### fancy prompt
+  # check that we are interactive, that we are not in Rstuido (via libPahts) or emacs/ESS (STERM iESS or dumb term)
+  isdumb <- options('STERM')=='iESS'       ||    # emacs
+            Sys.getenv('INSIDE_EMACS')!='' ||    # emacs
+            Sys.getenv('TERM') == 'dumb'   ||    # no color term
+            Sys.getenv('RSTUDIO') == '1'   ||    # rstudio
+            Sys.getenv("RADIAN_VERSION") != ""   # radian
   
-    # not in Rstudio, otherwise it would have added itself to libPaths
-    if(! any(grepl("RStudio", .libPaths()))){
 
-      # need utils to use install packages stuff
-      #library(utils)
 
-      # install missing packages
-      #basepkg <- c('dataview','setwidth','devtools','pacman') #'vimcom',
-      #install.packages( basepkg [! basepkg %in% installed.packages() ] )
+   # radian settings
+   if( Sys.getenv("RADIAN_VERSION") != "" ){
+      options(
+        radian.prompt = "\033[0;32m>\033[0m ",
+        radian.shell_prompt = "\033[0;31m#!>\033[0m ",
+        radian.browse_prompt = "\033[0;33mBrowse[{}]>\033[0m ",
+        radian.enable_reticulate_prompt = TRUE
+      )
+     library(colorout)
+   }
 
-      # colorout is not in cran
-      if(! 'colorout' %in% utils::installed.packages() ) devtools::install_github("jalvesaq/colorout")
-      if(! 'vimcom' %in% utils::installed.packages() ) devtools::install_github("jalvesaq/VimCom")
+  # nothing below is good for a dumb/emacs/rstudio R instance
+  # only useful if we are using interative mode (and we arent in R studio)
+  if(isdumb || !interactive()) return()
 
-      library(colorout) 
-      # pacman can be used to check+install other packages
-      if(! 'pacman' %in% utils::installed.packages() ) base::install.packages('pacamn')
-      library(pacman)
+  ## PROMPT
+  # add blue and pink colors to the prompt
+  updatePrompt <- function(...) {options(prompt=format(Sys.time(), 
+     #"\n# [38;5;27m%X[0;0m\n#[38;5;197m>[0;0m "
+     "\n[38;5;197m# [38;5;27m%X[0;0m\n "
+     )); return(TRUE)}
 
-      #  load (or install) others in cran
-      p_load(dataview) 
-      p_load(setwidth)
-      p_load(vimcom)
+ # add prompt changing function as task callback when we are interactive
+ # N.B R has to execute code (cannot just hit enter for new time)
+ addTaskCallback(updatePrompt)
+ updatePrompt()
 
-      # add blue and pink colors to the prompt
-      updatePrompt <- function(...) {options(prompt=format(Sys.time(), 
-         #"\n# [38;5;27m%X[0;0m\n#[38;5;197m>[0;0m "
-         "\n[38;5;197m# [38;5;27m%X[0;0m\n "
-         )); return(TRUE)}
-    }
-
-    # add prompt changing function as task callback when we are interactive
-    # N.B R has to execute code (cannot just hit enter for new time)
-    addTaskCallback(updatePrompt)
-
-    # load some other useful packages
-    # plyr before dplyr so we still have plyr functions, but mask outdated with dplyr's
-    p_load('stats') # want dplyr filter to be loaded after stats::filter
-    p_load('plyr')
-    p_load('dplyr')
-    p_load('tidyr')
-  }
-
+ # console R session, add color
+ library(colorout)
 }
 
-# if rstudio:  detach("package:colorout")
+undoRprofile <- function() {
+   removeTaskCallback(1)
+   options(prompt="> ")
+   .First <- function() return(T)
+   .Last <- function() return(T)
+}
+
 
 # scripting alaiases
 #s <- base::summary;
