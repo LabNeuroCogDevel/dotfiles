@@ -1,21 +1,143 @@
+call plug#begin('~/.vim/plugged')
+
+" mouse support
+set ttymouse=xterm2
+let mapleader="\<Space>"
+
+" spell
+inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
+
+" Plug 'junegunn/vim-easy-align'
+Plug 'vim-scripts/xoria256.vim'
+Plug 'olivertaylor/vacme'
+
+" --- tmux integration
+" vim-screen
+Plug 'ervandew/screen' 
+" use tmux in another terminal, dont close, strip whitespaces
+let g:ScreenImpl = 'Tmux'
+let g:ScreenShellExternal = 1
+let g:ScreenShellQuitOnqimExit = 0
+let g:ScreenShellTerminal = 'xterm'
+let g:ScreenIPython3 = 1
+" keybindings like nvim-R plugin 
+nmap <Leader>rf :ScreenShell<CR>
+nmap <Leader>pf :IPython<CR>
+nmap <Leader>rd V:ScreenSend<CR>Vj
+nmap <Leader>rb {V}:ScreenSend<CR>Vj
+vmap <Leader>rs :ScreenSend<CR>
+
+Plug 'tpope/vim-surround'
+" e.g. change surrounding quotes cs"'
+Plug 'tpope/vim-repeat'
+" and allow this action to repeate with .
+
+
+"  See Also
+"   Plug 'christoomey/vim-tmux-runner'
+"   let g:VtrStripLeadingWhitespace = 0
+"   let g:VtrClearEmptyLines = 0
+"   let g:VtrAppendNewline = 1
+"   noremap <silent> <C-c> :call RunTmuxPythonLine()<CR>
+"  OR
+"   Plug 'tpope/vim-tbone'
+"  OR
+"   Plug 'benmills/vimux'
+"  OR maybe
+"   Plug 'julienr/vim-cellmode'
+"   let g:cellmode_screen_sessionname='ipython'
+
+" markdown editor
+Plug 'JamshedVesuna/vim-markdown-preview'
+let vim_markdown_preview_github=1
+
+" ---- snippets -----
+" Snippets engine -- need pyton, vim-nox for debian
+Plug 'SirVer/ultisnips'
+" Snippets templates
+Plug 'honza/vim-snippets'
+" config 
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
+
+" 20171023 - https://statico.github.io/vim3.html: 'Vim after 15 years'
+"fzf fuzzy finder
+Plug '/opt/ni_tools/utils/fzf' " need to get fzf in vim
+Plug 'vim-scripts/ack.vim'    " ag search
+Plug 'junegunn/fzf.vim' " define :Buffers :Files :Ag, fzf-complete-*
+nmap <silent> <Leader>a :Ag<CR>
+nmap <silent> <Leader>b :Buffers<CR>
+nmap <silent> <Leader>t :Files<CR>
+
+Plug 'tpope/vim-fugitive'     " :Gcommit, :Gblame
+Plug 'airblade/vim-gitgutter' " changes on side
+
+Plug 'tpope/vim-unimpaired' "][ + q,n,os
+Plug 'vim-utils/vim-husk'
+
+
+Plug 'w0rp/ale' " lint
+let g:ale_fixers = {'python': ['remove_trailing_lines', 'trim_whitespace', 'autopep8']}
+let g:ale_r_lintr_options =  "with_defaults(infix_spaces_linter=NULL, absolute_paths_linter=NULL)"
+
+Plug 'kana/vim-fakeclip' " work around for vim complile w/-clipbord
+let g:fakeclip_terminal_multiplexer_type="tmux"
+
+
+Plug 'easymotion/vim-easymotion' " space,space,f_ (leader,leader,find, letter)
+
+
+" -- replaced with fzf
+" Plug 'wincent/Command-T' " leader j,t,b
+" nmap <silent> <Leader>s <Plug>(CommandTSearch)
+" nmap <silent> <Leader>c <Plug>(CommandTHistory)
+
+
+Plug 'jalvesaq/Nvim-R'
+"Plug 'roxma/nvim-completion-manager'
+"Plug 'gaalcaras/ncm-R'
+let R_assign = 3 " ' _ ' => -> (default is any '_' becomes '->' )
+let R_hl_term = 0
+" use radian with Nvim-R
+"   let R_app = "radian"
+"   let R_cmd = "R"
+" special escape sequences  -- 20190604 messes up xterm
+" needed for radian?
+"   let R_bracketed_paste = 1
+
+" completion while typing
+"  Plug 'roxma/vim-hug-neovim-rpc'
+"  Plug 'roxma/nvim-completion-manager'
+"  " OR ??
+"  Plug 'prabirshrestha/asyncomplete.vim'
+"
+"  " Either way, for R, need
+"  Plug 'gaalcaras/ncm-R'
+
+
+call plug#end()
+
+
+"""""""""""""""""""""""""
+"  DEFAULT VIM OPTIONS  "
+"""""""""""""""""""""""""
 set nocompatible
 set hidden
 set t_Co=256
 
-
 filetype on
 filetype plugin on
 syntax enable
-
 set hlsearch
 
 set nu
 set showcmd
+"colorscheme molokai
+colorscheme xoria256
 
 
-
-
-" Who doesn't like autoindent?
 set autoindent
 " 8 is default character tab
 set shiftwidth=3
@@ -27,6 +149,11 @@ set smarttab
 
 set wildmenu
 set wildmode=list:longest,full
+set guifont=Droid\ Sans\ Mono\ 12
+
+" set xterm title
+set title 
+let &titlestring = "vim:%{expand(\"%:p %y %L\")} ".$USER."@".hostname().":".getcwd()
 
 
 " sudo save
@@ -39,99 +166,3 @@ let perl_extended_vars = 1
 
 " jj is escape
 inoremap jj <ESC>
-" set leader, but , is reverse movement
-" let mapleader=","
-
-
-"""" PLUGINS """"
-
-" use :Bundle* commands
-" git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#rc()
-
-Bundle 'xoria256.vim'
-colorscheme xoria256
-
-Bundle 'gmarik/vundle'
-Bundle 'ZenCoding.vim'
-
-Bundle 'better-snipmate-snippet'
-Bundle 'rainbow_parentheses.vim'
-" Bundle 'ShowMarks'
-" <leader>mt  toggle display
-
-Bundle 'surround.vim'
-" ds<">    - delete <">
-" cs<"><'> - change " to '
-" ys<o><"> - wrap " around object e.g aw 
-
-Bundle 'repeat.vim'
-Bundle 'ctrlp.vim'
-Bundle 'EasyMotion'
-" <leader><leader><motion>
-
-Bundle 'UltiSnips'
-Bundle 'commentary.vim'
-" \\<motion> comment/uncomment
-
-Bundle "http://github.com/gmarik/vim-visual-star-search.git"
-" * or # search for selected text
-
-
-Bundle 'vim-orgmode'
-Bundle 'Markdown-syntax'
-
-
-" see all "vimux" below
-Bundle 'Screen-vim---gnu-screentmux'
-Bundle 'Vim-R-plugin'
-" \rf - start; \rq - quit
-" \bd - send block, go down
-" \sd - send selection
-
-
-" linters
-" Bundle 'Syntastic'
-" Bundle 'ucompleteme'
-
-"Bundle 'TT2'
-
-" matlab lint, for .m files
-Bundle 'matlab.vim'
-Bundle 'mlint.vim'
-autocmd BufEnter *.m    compiler mlint
-" <leader>l
-
-" tmux with vim-screen
-let g:ScreenImpl = 'Tmux'
-
-
-" do syntax checking (lint) on open
-let g:syntastic_check_on_open = 1
-
-
-" solarize
-" http://ethanschoonover.com/solarized/vim-colors-solarized
-"let g:solarized_termcolors=256
-
-" mini buff
-"let g:miniBufExplMapWindowNavVim = 1 
-"let g:miniBufExplMapWindowNavArrows = 1 
-"let g:miniBufExplMapCTabSwitchBufs = 1 
-"let g:miniBufExplModSelTarget = 1 
-
-
-" UtilSnips
-" :h UltiSnips-triggers
-let g:UltiSnipsExpandTrigger="<c-j>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-
-set guifont=Droid\ Sans\ Mono\ 12
-
-Bundle 'vimux.vim'
-" send selction
-vmap <leader>s "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
-" send selction
-nmap <leader>s V<leader>s<CR>
