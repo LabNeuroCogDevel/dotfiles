@@ -1,11 +1,8 @@
 # this should probably go into Rprofile.site
 #
 # CRANmirror
-#options(repos=structure(c(CRAN="http://lib.stat.cmu.edu/R/CRAN")))
-#options(repos=structure(c(CRAN="http://cran.mirrors.hoobly.com")))
-#options(repos=structure(c(CRAN="https://mirrors.nics.utk.edu/cran")))
-
-options(repos=structure(c(CRAN="https://cran.revolutionanalytics.com")))
+options(repos=structure(c(CRAN="http://lib.stat.cmu.edu/R/CRAN")))
+#options(repos=structure(c(CRAN="https://cran.revolutionanalytics.com")))
 LNCDupdateLib <- function() {
   nitoolslibpath <-'/opt/ni_tools/Rlib/'
   if(file.exists(nitoolslibpath)){
@@ -32,6 +29,7 @@ updatePrompt <- function(...) {options(prompt=format(Sys.time(), "\n# %X\n#> "))
             Sys.getenv('INSIDE_EMACS')!='' ||    # emacs
             Sys.getenv('TERM') == 'dumb'   ||    # no color term
             Sys.getenv('RSTUDIO') == '1'   ||    # rstudio
+            Sys.getenv('NVIMR_ID') != ''   ||    # nvim-r
             Sys.getenv("RADIAN_VERSION") != ""   # radian
   
 
@@ -45,6 +43,7 @@ updatePrompt <- function(...) {options(prompt=format(Sys.time(), "\n# %X\n#> "))
         radian.enable_reticulate_prompt = TRUE
       )
      library(colorout)
+
    }
 
   # nothing below is good for a dumb/emacs/rstudio R instance
@@ -72,6 +71,10 @@ undoRprofile <- function() {
    options(prompt="> ")
    .First <- function() return(T)
    .Last <- function() return(T)
+}
+
+cli_colortheme_change <-function(){
+   system('/home/ni_tools/dynamic-colors/bin/dynamic-colors cycle')
 }
 
 
@@ -128,3 +131,6 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
 
     return(datac)
 }
+
+
+xinit = "NA"
