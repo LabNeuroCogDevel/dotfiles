@@ -1,6 +1,7 @@
 # this should probably go into Rprofile.site
 #
 # CRANmirror
+#options(repo="https://mirrors.nics.utk.edu/cran")
 options(repos=structure(c(CRAN="http://lib.stat.cmu.edu/R/CRAN")))
 #options(repos=structure(c(CRAN="https://cran.revolutionanalytics.com")))
 LNCDupdateLib <- function() {
@@ -19,6 +20,7 @@ invisible( LNCDupdateLib() )
 
 
 
+<<<<<<< HEAD
 updatePrompt <- function(...) {options(prompt=format(Sys.time(), "\n# %X\n#> ")); return(TRUE)}
 
 .First <- function(...) {
@@ -32,7 +34,6 @@ updatePrompt <- function(...) {options(prompt=format(Sys.time(), "\n# %X\n#> "))
             Sys.getenv('NVIMR_ID') != ''   ||    # nvim-r
             Sys.getenv("RADIAN_VERSION") != ""   # radian
   
-
 
    # radian settings
    if( Sys.getenv("RADIAN_VERSION") != "" ){
@@ -131,6 +132,3 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
 
     return(datac)
 }
-
-
-xinit = "NA"
